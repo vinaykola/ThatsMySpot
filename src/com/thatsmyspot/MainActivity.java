@@ -70,8 +70,8 @@ public class MainActivity extends Activity {
 		        pb.setMax(Integer.parseInt(avail));
 		        Random r = new Random();
 		        pb.setProgress(r.nextInt(pb.getMax()));
-		        pb.getProgressDrawable().setBounds(new Rect(0, 0, 100, 60));
-		        int height = 60;
+		        int height = rl.getWidth()/10;
+		        pb.getProgressDrawable().setBounds(new Rect(0, 0, 100, height));
 
 		        if (i == 0) {
 		            RelativeLayout.LayoutParams rlpB = new RelativeLayout.LayoutParams(
