@@ -1,14 +1,21 @@
 package com.thatsmyspot;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.PrintStream;
+import java.io.InputStream;
+import java.util.Random;
 import java.util.Scanner;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.content.res.AssetManager;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -19,39 +26,74 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		RelativeLayout rl = (RelativeLayout)findViewById(R.id.rlayout);
-		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-		int width = rl.getWidth();
-		
-		TextView tv = new TextView(this);
-		tv.setText(R.string.welcome);
-		tv.setId(1);
-		rl.addView(tv);
-
 		try {
-			File f = new File("buildings.txt");
-			PrintStream output = new PrintStream(f);
-			output.println("here");
-			output.close();
-			Scanner scan = new Scanner(f);
+			AssetManager as = this.getAssets();
+			InputStream is = as.open("buildings.txt");
+			Scanner scan = new Scanner(is);
+			
+			//accessing relative layout defined in xml
+			RelativeLayout rl = (RelativeLayout) findViewById(R.id.rlayout);
+			RelativeLayout.LayoutParams rlpT = new RelativeLayout.LayoutParams(
+					RelativeLayout.LayoutParams.MATCH_PARENT,
+					RelativeLayout.LayoutParams.WRAP_CONTENT);
+			rlpT.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+			
+			//creating a text view with instructions for the user
+			TextView tv = new TextView(this);
+			tv.setText("Welcome! Please choose a location below:");
+			tv.setId(2000);
+			tv.setLayoutParams(rlpT);
+			//adding the text view to the relative layout
+			rl.addView(tv);
 			
 			int i=0;
-			while(scan.hasNext()) {
-				Button b = new Button(this);
-				String str = scan.next();
-				b.setText(str);
-				b.setWidth(width);
-				if(i>0) {
-					lp.addRule(RelativeLayout.BELOW, i);
-					rl.addView(b);
-				}
-				else {
-					lp.addRule(RelativeLayout.BELOW, tv.getId());
-					rl.addView(b);
-				}
-				i++;
-			}
+		    while(scan.hasNext()) {
+		    	//creating buttons dynamically
+		        Button button = new Button(this);
+		        String[] str = scan.nextLine().split("\t");
+		        final String name = str[0];
+		        String avail = str[1];
+		        button.setText(name);
+		        button.setId(1000 + i);
+		        button.setOnClickListener(new OnClickListener() {	
+					@Override
+					public void onClick(View v) {
+						//calling time choosing activity and passing location
+						Intent intent = new Intent(MainActivity.this, TimeActivity.class);
+						intent.putExtra("location", name);
+						startActivity(intent);
+					}
+				});
+		        
+		        //creating progress bar
+		        ProgressBar pb = new ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal);
+		        pb.setMax(Integer.parseInt(avail));
+		        Random r = new Random();
+		        pb.setProgress(r.nextInt(pb.getMax()));
+		        pb.getProgressDrawable().setBounds(new Rect(0, 0, 100, 60));
+		        int height = 60;
+
+		        if (i == 0) {
+		            RelativeLayout.LayoutParams rlpB = new RelativeLayout.LayoutParams(
+		                    LayoutParams.MATCH_PARENT, height);
+		            //setting first button below text view
+		            rlpB.addRule(RelativeLayout.BELOW, tv.getId());
+		            button.setLayoutParams(rlpB);
+		            //adding progress bar to button
+		            button.setCompoundDrawables(null, null, pb.getProgressDrawable(), null);
+		            rl.addView(button);
+		        } else {
+		            RelativeLayout.LayoutParams rlpB = new RelativeLayout.LayoutParams(
+		                    LayoutParams.MATCH_PARENT, height);
+		            //setting buttons to come one after another
+		            rlpB.addRule(RelativeLayout.BELOW, button.getId() - 1);
+		            button.setLayoutParams(rlpB);
+		            //adding progress bar to button
+		            button.setCompoundDrawables(null, null, pb.getProgressDrawable(), null);
+		            rl.addView(button);
+		        }
+		        i++;
+		    }
 		}
 		catch (IOException e) {
 			e.printStackTrace();

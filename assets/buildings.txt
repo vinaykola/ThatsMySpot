@@ -1,0 +1,9 @@
+Klaus	100
+College of Computing	30
+Van Leer	25
+Skiles	70
+Library	150
+Student Center	2
+DM Smith	100
+Instructional Center	200
+BioTechQuad	10
