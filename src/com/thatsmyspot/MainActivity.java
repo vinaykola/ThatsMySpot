@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -70,12 +71,12 @@ public class MainActivity extends Activity {
 		        pb.setMax(Integer.parseInt(avail));
 		        Random r = new Random();
 		        pb.setProgress(r.nextInt(pb.getMax()));
-		        int height = rl.getWidth()/10;
-		        pb.getProgressDrawable().setBounds(new Rect(0, 0, 100, height));
+		        pb.getProgressDrawable().setBounds(new Rect(0, 0, 100, 80));
 
 		        if (i == 0) {
 		            RelativeLayout.LayoutParams rlpB = new RelativeLayout.LayoutParams(
-		                    LayoutParams.MATCH_PARENT, height);
+		                    LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+		            pb.bringToFront();
 		            //setting first button below text view
 		            rlpB.addRule(RelativeLayout.BELOW, tv.getId());
 		            button.setLayoutParams(rlpB);
@@ -84,7 +85,7 @@ public class MainActivity extends Activity {
 		            rl.addView(button);
 		        } else {
 		            RelativeLayout.LayoutParams rlpB = new RelativeLayout.LayoutParams(
-		                    LayoutParams.MATCH_PARENT, height);
+		                    LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		            //setting buttons to come one after another
 		            rlpB.addRule(RelativeLayout.BELOW, button.getId() - 1);
 		            button.setLayoutParams(rlpB);
