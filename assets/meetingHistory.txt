@@ -1,0 +1,8 @@
+Rochelle: <Meeting at Clough 6:30pm>
+Amish: No <Meeting at Clough 7:00pm>?
+Rochelle: Yes
+Vinay: Yes
+Swetha: No <Meeting at Klaus 7:00pm>?
+Rochelle: Yes
+Amish: Yes
+Vinay: Yes

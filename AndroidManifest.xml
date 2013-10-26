@@ -26,6 +26,14 @@
             android:name="com.thatsmyspot.TimeActivity"
             android:label="@string/title_activity_time" >
         </activity>
+        <activity
+            android:name="com.thatsmyspot.ConversationsActivity"
+            android:label="@string/title_activity_conversations" >
+        </activity>
+        <activity
+            android:name="com.thatsmyspot.MessageActivity"
+            android:label="@string/title_activity_message" >
+        </activity>
     </application>
 
 </manifest>

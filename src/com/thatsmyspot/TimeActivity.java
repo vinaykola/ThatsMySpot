@@ -5,6 +5,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.RelativeLayout;
 
 public class TimeActivity extends Activity {
 
@@ -16,6 +20,17 @@ public class TimeActivity extends Activity {
 		Intent intent = getIntent();
 		String location = intent.getExtras().getString("location");
 		Log.d("location", location);
+		RelativeLayout rl = (RelativeLayout) findViewById(R.id.timeAct);
+		Button b = new Button(this);
+		b.setOnClickListener(new OnClickListener() {	
+			@Override
+			public void onClick(View v) {
+				//calling time choosing activity and passing location
+				Intent intent = new Intent(TimeActivity.this, MessageActivity.class);
+				startActivity(intent);
+			}
+		});
+		rl.addView(b);
 	}
 
 	@Override
