@@ -34,6 +34,18 @@
             android:name="com.thatsmyspot.MessageActivity"
             android:label="@string/title_activity_message" >
         </activity>
+        <activity
+            android:name="com.thatsmyspot.ChangeActivity"
+            android:label="@string/title_activity_change" >
+        </activity>
+        <activity
+            android:name="com.thatsmyspot.LocationActivity"
+            android:label="@string/title_activity_location" >
+        </activity>
+        <activity
+            android:name="com.thatsmyspot.ContactsActivity"
+            android:label="@string/title_activity_contacts" >
+        </activity>
     </application>
 
 </manifest>

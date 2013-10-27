@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 public class MessageActivity extends Activity {
@@ -23,13 +24,17 @@ public class MessageActivity extends Activity {
 
 		TextView messageHistText = (TextView) findViewById(R.id.messageHist);
 
-		setTitle("Messaging with: Social Computing Group");
+		setTitle(getIntent().getStringExtra("groupName"));
+//-----------------------------------------------------------------------------------------------------
+		//populate this try/catch with the meeting history
 		try {
 			AssetManager am = this.getAssets();
 			InputStream is = am.open("meetingHistory.txt");
 			Scanner scan = new Scanner(is);
 			
 			while(scan.hasNext()) {
+				//only change the scan.nextLine() here! You may not need the while if you are
+				//appending bunch of code with \n chars on the end.
 				messageHistText.append(scan.nextLine()+"\n");
 			}
 		} catch (IOException e) {
@@ -37,12 +42,13 @@ public class MessageActivity extends Activity {
 			e.printStackTrace();
 		}
 		
-		Button addButton = (Button) findViewById(R.id.btnAdd);
+		ImageButton addButton = (ImageButton) findViewById(R.id.btnAdd);
 		addButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(MessageActivity.this, MainActivity.class);
-				startActivity(intent);				
+				Intent intent = new Intent(MessageActivity.this, LocationActivity.class);
+				intent.putExtras(getIntent()); //This passes the groupName only to the next activity
+				startActivity(intent);	
 			}
 		});
 		
@@ -58,7 +64,9 @@ public class MessageActivity extends Activity {
 		noButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(MessageActivity.this, MainActivity.class);
+				Intent intent = new Intent(MessageActivity.this, ChangeActivity.class);
+				intent.putExtras(getIntent()); //This adds the groupName
+				//This adds a string that will be posted after changing the location and/or time
 				intent.putExtra("changeRequest", "Rochelle: No");
 				startActivity(intent);
 			}

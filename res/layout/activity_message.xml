@@ -18,16 +18,18 @@
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:text="@string/messages" />
 
-        <Button
+        <ImageButton
             android:id="@+id/btnAdd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
-            android:drawableLeft="@drawable/plusbutton"
-            android:text="@string/add" />
+            android:contentDescription="@string/add"
+            android:background="@drawable/plusbutton" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -55,14 +57,15 @@
 
         <Button
             android:id="@+id/btnYes"
-            android:layout_width="wrap_content"
+            android:layout_width="163dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
+            android:gravity="center"
+            android:layout_toLeftOf="@+id/btnNo"
             android:text="@string/yes" />
 
         <Button
             android:id="@+id/btnNo"
-            android:layout_width="wrap_content"
+            android:layout_width="163dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:text="@string/no" />

@@ -1,17 +1,49 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/timeAct"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".TimeActivity" >
+    tools:context=".ClockActivity" >
 
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/textTimeGroup"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/groupName"
+        android:layout_marginTop="15dp"
+        android:text="@string/timegroup" />
+
+    <TimePicker
+        android:id="@+id/timePicker1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/nextT"
+        android:layout_centerVertical="true"
+        android:measureAllChildren="true" />
+
+    <EditText
+        android:id="@+id/groupName"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/timePicker1"
+        android:layout_below="@+id/textTimeGroup"
+        android:layout_marginTop="29dp"
+        android:ems="10"
+        android:hint="@string/group_name" />
+
+    <Button
+        android:id="@+id/nextT"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/timePicker1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="47dp"
+        android:onClick="getTime"
+        android:text="@string/button_send" />
 
 </RelativeLayout>
