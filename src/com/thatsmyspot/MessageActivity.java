@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 public class MessageActivity extends Activity {
 
+	private boolean noevent = false;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -37,6 +38,12 @@ public class MessageActivity extends Activity {
 				//appending bunch of code with \n chars on the end.
 				messageHistText.append(scan.nextLine()+"\n");
 			}
+			
+			Intent prev = getIntent();
+			if(prev.hasExtra("changedEvent")) {
+				messageHistText.append(prev.getStringExtra("changeRequest"));
+				noevent = true;
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -52,25 +59,33 @@ public class MessageActivity extends Activity {
 			}
 		});
 		
-		Button yesButton = (Button) findViewById(R.id.btnYes);
-		yesButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-				TextView messageHistText = (TextView) findViewById(R.id.messageHist);
-				messageHistText.append("Rochelle: Yes\n");
-			}
-		});
-		Button noButton = (Button) findViewById(R.id.btnNo);
-		noButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(MessageActivity.this, ChangeActivity.class);
-				intent.putExtras(getIntent()); //This adds the groupName
-				//This adds a string that will be posted after changing the location and/or time
-				intent.putExtra("changeRequest", "Rochelle: No");
-				startActivity(intent);
-			}
-		});
+		if(noevent) {
+			Button yesButton = (Button) findViewById(R.id.btnYes);
+			yesButton.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View arg0) {
+					TextView messageHistText = (TextView) findViewById(R.id.messageHist);
+					messageHistText.append("Rochelle: Yes\n");
+				}
+			});
+			Button noButton = (Button) findViewById(R.id.btnNo);
+			noButton.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent(MessageActivity.this, ChangeActivity.class);
+					intent.putExtras(getIntent()); //This adds the groupName
+					//This adds a string that will be posted after changing the location and/or time
+					intent.putExtra("changeRequest", "Rochelle: No");
+					startActivity(intent);
+				}
+			});
+		}
+		else {
+			Button yesButton = (Button) findViewById(R.id.btnYes);
+			yesButton.setEnabled(false);
+			Button noButton = (Button) findViewById(R.id.btnNo);
+			noButton.setEnabled(false);
+		}
 	}
 
 	@Override

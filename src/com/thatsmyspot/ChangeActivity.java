@@ -44,6 +44,7 @@ public class ChangeActivity extends Activity {
 		else {
 			standardTime += ""+hour+":"+minute+" am";
 		}
+		final String sTime = standardTime;
 		timeBtn.setText(standardTime);//change this to the time of the event
 		timeBtn.setOnClickListener(new OnClickListener() {
 			@Override
@@ -51,6 +52,27 @@ public class ChangeActivity extends Activity {
 				Intent intent = new Intent(ChangeActivity.this, TimeActivity.class);
 				intent.putExtras(getIntent());
 				startActivity(intent);
+			}
+		});
+		
+		Button done = (Button) findViewById(R.id.doneBtn);
+		done.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(ChangeActivity.this, MessageActivity.class);
+				Intent prev = getIntent();
+				if(prev.hasExtra("changedEvent")) {
+					String s = "";
+					s += intent.getStringExtra("changeRequest")+" <Meeting at ";
+					s += prev.getStringExtra("location")+" ";
+					s += sTime+">";
+					prev.putExtra("changeRequest", s);
+					prev.putExtra("changedEvent", true);
+				}
+				prev.putExtra("location", prev.getStringExtra("location"));
+				prev.putExtra("time", prev.getStringExtra("time"));
+				prev.putExtra("groupName", prev.getStringExtra("groupName"));
 			}
 		});
 	}
