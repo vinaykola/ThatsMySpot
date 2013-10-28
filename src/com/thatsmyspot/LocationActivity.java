@@ -64,17 +64,18 @@ public class LocationActivity extends Activity {
 						//calling time choosing activity and passing location
 						Intent intent;
 						//Check to see if coming from an already created meeting group
-						if(getIntent().hasExtra("groupName")) {
+						if(getIntent().hasExtra("changeRequest")) {
 							intent = new Intent(LocationActivity.this, ChangeActivity.class);
 							if(name.equals(getIntent().getStringExtra("location"))) {
 								intent.putExtra("location", name); //Adds location chosen only if different
 								intent.putExtra("changedEvent", true); //Adds a boolean value of event changed
 							}
-							intent.putExtra("groupName", getIntent().getStringExtra("groupName"));
+							intent.putExtra("groupName", getIntent().getStringExtra("groupName")); //Adds the groupname
 						}
 						else {
 							intent = new Intent(LocationActivity.this, TimeActivity.class);
-							intent.putExtra("location", name);
+							intent.putExtra("location", name); //adds the location name
+							intent.putExtras(getIntent()); //adds the groupname
 						}
 						startActivity(intent);
 					}

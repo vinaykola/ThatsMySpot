@@ -63,7 +63,7 @@ public class MessageActivity extends Activity {
 			Button yesButton = (Button) findViewById(R.id.btnYes);
 			yesButton.setOnClickListener(new OnClickListener() {
 				@Override
-				public void onClick(View arg0) {
+				public void onClick(View v) {
 					TextView messageHistText = (TextView) findViewById(R.id.messageHist);
 					messageHistText.append("Rochelle: Yes\n");
 				}

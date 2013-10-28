@@ -17,9 +17,9 @@
     <string name="no">No</string>
     <string name="title_activity_change">ChangeActivity</string>
     <string name="what_change">What would you like to change?</string>
-    <string name="done">Done!</string>
+    <string name="done">Done</string>
     <string name="title_activity_location">LocationActivity</string>
     <string name="title_activity_contacts">ContactsActivity</string>
-    <string name="button_send">Next</string>
+    <string name="next">Next</string>
 
 </resources>

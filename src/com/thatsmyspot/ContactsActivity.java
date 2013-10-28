@@ -89,7 +89,7 @@ public class ContactsActivity extends ListActivity {
 	{
 		final ArrayAdapter<String> adapter = new ArrayAdapter<String> (this, android.R.layout.simple_list_item_multiple_choice, contact_name);
 		setListAdapter(adapter);
-		Button button = (Button) findViewById(R.id.button1);
+		Button button = (Button) findViewById(R.id.nextBtn);
 		   button.setOnClickListener(new View.OnClickListener() {
 			   public void onClick(View v) {
 

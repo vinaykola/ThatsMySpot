@@ -9,18 +9,18 @@
     tools:context=".ContactsActivity" >
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/nextBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:text="@string/button_send"/>
+        android:text="@string/next"/>
 
     <ListView
         android:id="@android:id/list"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/button1"
+        android:layout_above="@+id/nextBtn"
         android:choiceMode="multipleChoice"
         android:fastScrollEnabled="true"
         android:textFilterEnabled="true" >
