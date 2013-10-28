@@ -54,10 +54,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true" >
+        
+        <Spinner
+        android:id="@+id/spinner"
+        android:layout_height="wrap_content"
+        android:layout_width = "200dp"
+        android:layout_toLeftOf="@+id/btnYes" />
 
         <Button
             android:id="@+id/btnYes"
-            android:layout_width="163dp"
+            android:layout_width="63dp"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:layout_toLeftOf="@+id/btnNo"
@@ -65,7 +71,7 @@
 
         <Button
             android:id="@+id/btnNo"
-            android:layout_width="163dp"
+            android:layout_width="63dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:text="@string/no" />
