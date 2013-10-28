@@ -75,7 +75,9 @@ public class LocationActivity extends Activity {
 						else {
 							intent = new Intent(LocationActivity.this, TimeActivity.class);
 							intent.putExtra("location", name); //adds the location name
-							intent.putExtras(getIntent()); //adds the groupname
+							if(getIntent().hasExtra("groupName"))
+								intent.putExtras(getIntent()); //adds the groupname
+							intent.putExtra("newEvent", true);
 						}
 						startActivity(intent);
 					}

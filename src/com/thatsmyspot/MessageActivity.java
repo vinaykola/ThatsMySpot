@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 public class MessageActivity extends Activity {
 
-	private boolean noevent = false;
+	private boolean event = false;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -42,7 +42,15 @@ public class MessageActivity extends Activity {
 			Intent prev = getIntent();
 			if(prev.hasExtra("changedEvent")) {
 				messageHistText.append(prev.getStringExtra("changeRequest"));
-				noevent = true;
+				event = true;
+			}
+			if(prev.hasExtra("newEvent")) {
+				//Need to add group to conversation list
+				String location = prev.getStringExtra("location");
+				String time = ChangeActivity.convertTime(prev);
+				String user = "Rochelle" + ": "; //Need to find a way to retrieve this, using username or actual names
+				messageHistText.append(user+"<Meeting at "+location+" "+time+">\n");
+				event = true;
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -59,11 +67,13 @@ public class MessageActivity extends Activity {
 			}
 		});
 		
-		if(noevent) {
+		if(event) {
 			Button yesButton = (Button) findViewById(R.id.btnYes);
 			yesButton.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
+//--------------------------------------------------------------------------------------------------------------
+					//need to record in messageHistory
 					TextView messageHistText = (TextView) findViewById(R.id.messageHist);
 					messageHistText.append("Rochelle: Yes\n");
 				}
@@ -72,8 +82,18 @@ public class MessageActivity extends Activity {
 			noButton.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
+//---------------------------------------------------------------------------------------------------------------
+					//values of location, time, groupName, and changeRequest
 					Intent intent = new Intent(MessageActivity.this, ChangeActivity.class);
-					intent.putExtras(getIntent()); //This adds the groupName
+					Intent prev = getIntent();
+					//Doing the following cause we don't want contacts to be passed, but you may want to 
+					//	switch these three ifs to just intent.putExtras(prev) if you do want contacts passed.
+					if(intent.hasExtra("location"))
+						intent.putExtra("location", prev.getStringExtra("location")); //This adds the location
+					if(intent.hasExtra("time"))
+						intent.putExtra("time", prev.getStringExtra("time")); //This adds the time
+					if(intent.hasExtra("groupName"))
+						intent.putExtra("groupName", prev.getStringExtra("groupName")); //This adds the groupName
 					//This adds a string that will be posted after changing the location and/or time
 					intent.putExtra("changeRequest", "Rochelle: No");
 					startActivity(intent);

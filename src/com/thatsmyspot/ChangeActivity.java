@@ -28,24 +28,8 @@ public class ChangeActivity extends Activity {
 		});
 		
 		Button timeBtn = (Button) findViewById(R.id.timeBtn);
-		String[] time = intent.getStringExtra("time").split(":");
-		int hour = Integer.parseInt(time[0]);
-		int minute = Integer.parseInt(time[1]);
-		String standardTime = "";
-		if(hour == 0) {
-			standardTime += "12:"+minute+" am";
-		}
-		else if(hour == 12) {
-			standardTime += "12:"+minute+" pm";
-		}
-		else if(hour > 12) {
-			standardTime += ""+hour%12+":"+minute+" pm";
-		}
-		else {
-			standardTime += ""+hour+":"+minute+" am";
-		}
-		final String sTime = standardTime;
-		timeBtn.setText(standardTime);//change this to the time of the event
+		final String sTime = convertTime(intent);
+		timeBtn.setText(sTime);//change this to the time of the event
 		timeBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -84,4 +68,29 @@ public class ChangeActivity extends Activity {
 		return true;
 	}
 
+	public static String convertTime(Intent intent) {
+		String[] time = intent.getStringExtra("time").split(":");
+		int hour = Integer.parseInt(time[0]);
+		int minute = Integer.parseInt(time[1]);
+		String standardTime = "";
+		String min = "";
+		if(minute < 10) {
+			min = "0"+minute;
+		}
+		else
+			min = ""+minute;
+		if(hour == 0) {
+			standardTime += "12:"+min+" am";
+		}
+		else if(hour == 12) {
+			standardTime += "12:"+min+" pm";
+		}
+		else if(hour > 12) {
+			standardTime += ""+hour%12+":"+min+" pm";
+		}
+		else {
+			standardTime += ""+hour+":"+min+" am";
+		}
+		return standardTime;
+	}
 }
