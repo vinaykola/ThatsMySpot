@@ -88,11 +88,11 @@ public class MessageActivity extends Activity {
 					Intent prev = getIntent();
 					//Doing the following cause we don't want contacts to be passed, but you may want to 
 					//	switch these three ifs to just intent.putExtras(prev) if you do want contacts passed.
-					if(intent.hasExtra("location"))
+					if(prev.hasExtra("location"))
 						intent.putExtra("location", prev.getStringExtra("location")); //This adds the location
-					if(intent.hasExtra("time"))
+					if(prev.hasExtra("time"))
 						intent.putExtra("time", prev.getStringExtra("time")); //This adds the time
-					if(intent.hasExtra("groupName"))
+					if(prev.hasExtra("groupName"))
 						intent.putExtra("groupName", prev.getStringExtra("groupName")); //This adds the groupName
 					//This adds a string that will be posted after changing the location and/or time
 					intent.putExtra("changeRequest", "Rochelle: No");
