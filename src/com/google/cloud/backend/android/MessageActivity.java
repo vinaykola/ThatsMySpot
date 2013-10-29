@@ -42,7 +42,7 @@ public class MessageActivity extends CloudBackendActivity {
 		messageHist = (RelativeLayout) findViewById(R.id.rlpMsgHist);
 
 		setTitle(getIntent().getStringExtra("groupName"));
-		getLocations();
+		getLocations(getIntent().getStringExtra("eventID"));
 
 		//		//-----------------------------------------------------------------------------------------------------
 		//		//populate this try/catch with the meeting history
@@ -192,13 +192,13 @@ public class MessageActivity extends CloudBackendActivity {
 			/* Toast.makeText(parent.getContext(), 
 				"OnItemSelectedListener : " + parent.getItemAtPosition(pos).toString(),
 				Toast.LENGTH_SHORT).show(); */
-			getLocationDetails(parent.getItemAtPosition(pos).toString());
+			getLocationDetails(getIntent().getStringExtra("eventID"),parent.getItemAtPosition(pos).toString());
 
 		}
 
 		@Override
 		public void onNothingSelected(AdapterView<?> parent) {
-			getLocationDetails(parent.getItemAtPosition(0).toString());
+			getLocationDetails(getIntent().getStringExtra("eventID"),parent.getItemAtPosition(0).toString());
 		}
 
 	}
@@ -209,7 +209,7 @@ public class MessageActivity extends CloudBackendActivity {
 
 	}
 
-	public void getLocations() {
+	public void getLocations(String eventID) {
 
 		// create a response handler that will receive the query result or an error
 		CloudCallbackHandler<List<CloudEntity>> handler = new CloudCallbackHandler<List<CloudEntity>>() {
@@ -238,7 +238,7 @@ public class MessageActivity extends CloudBackendActivity {
 			}
 		};
 
-		getCloudBackend().listByProperty("Event", "eventID",F.Op.EQ,"vinaykola@gmail.com12:12 pm",Order.DESC , 1, Scope.FUTURE_AND_PAST, handler);
+		getCloudBackend().listByProperty("Event", "eventID",F.Op.EQ,eventID,Order.DESC , 1, Scope.FUTURE_AND_PAST, handler);
 	}
 
 	private void handleEndpointException(IOException e) {
@@ -285,7 +285,7 @@ public class MessageActivity extends CloudBackendActivity {
 		CloudCallbackHandler<CloudEntity> handler = new CloudCallbackHandler<CloudEntity>() {
 			@Override
 			public void onComplete(final CloudEntity result) {
-				getLocationDetails(String.valueOf(spinner.getSelectedItem()));
+				getLocationDetails(getIntent().getStringExtra("eventID"),String.valueOf(spinner.getSelectedItem()));
 			}
 
 			@Override
@@ -336,7 +336,7 @@ public class MessageActivity extends CloudBackendActivity {
 		CloudCallbackHandler<CloudEntity> handler = new CloudCallbackHandler<CloudEntity>() {
 			@Override
 			public void onComplete(final CloudEntity result) {
-				getLocationDetails(String.valueOf(spinner.getSelectedItem()));
+				getLocationDetails(getIntent().getStringExtra("eventID"),String.valueOf(spinner.getSelectedItem()));
 			}
 
 			@Override
@@ -350,7 +350,7 @@ public class MessageActivity extends CloudBackendActivity {
 	}
 
 
-	public void getLocationDetails(String loc) {
+	public void getLocationDetails(String eventID, String loc) {
 		// create a response handler that will receive the query result or an error
 		CloudCallbackHandler<List<CloudEntity>> handler = new CloudCallbackHandler<List<CloudEntity>>() {
 			@Override
@@ -371,7 +371,7 @@ public class MessageActivity extends CloudBackendActivity {
 			}
 		};
 
-		getCloudBackend().listByProperty("Event", "eventID2",F.Op.EQ,"vinaykola@gmail.com12:12 pm" +loc,Order.DESC , 1, Scope.FUTURE_AND_PAST, handler);  
+		getCloudBackend().listByProperty("Event", "eventID2",F.Op.EQ,eventID +loc,Order.DESC , 1, Scope.FUTURE_AND_PAST, handler);  
 	}
 
 	public void createTextFields(String location, String time, String status, String group) {

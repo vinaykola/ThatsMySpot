@@ -275,7 +275,8 @@ public class ContactsActivity extends CloudBackendActivity {
 				String location = activityChangeIntent.getStringExtra("location");
 				String time = ChangeActivity.convertTime(activityChangeIntent.getStringExtra("time"));
 				String user = getUsername();
-				System.out.println("eeeeeeeeeeeeeeeeeeeee");
+				activityChangeIntent.putExtra("user", user); // Add username to the intent
+				activityChangeIntent.putExtra("eventID", user+time);
 				NewEvent(sel_contacts,location,time,user);
 				for(String contact: selectedContacts){
 					CloudEntity cm = getCloudBackend().createCloudMessage(contact);
