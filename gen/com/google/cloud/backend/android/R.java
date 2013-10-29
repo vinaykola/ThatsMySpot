@@ -22,37 +22,39 @@ public final class R {
     }
     public static final class drawable {
         public static final int back=0x7f020000;
-        public static final int ic_launcher=0x7f020001;
-        public static final int plusbutton=0x7f020002;
+        public static final int green_check_icon=0x7f020001;
+        public static final int ic_launcher=0x7f020002;
+        public static final int plusbutton=0x7f020003;
+        public static final int red_x_icon=0x7f020004;
+        public static final int yellow_question_mark=0x7f020005;
     }
     public static final class id {
-        public static final int action_settings=0x7f08001b;
+        public static final int action_settings=0x7f08001a;
         public static final int btnAdd=0x7f08000a;
-        public static final int btnNo=0x7f080015;
-        public static final int btnYes=0x7f080014;
+        public static final int btnNo=0x7f080014;
+        public static final int btnYes=0x7f080013;
         public static final int changeText=0x7f080000;
         public static final int contactlayout=0x7f080004;
         public static final int conversationLayout=0x7f080007;
         public static final int convosTxt=0x7f080009;
         public static final int doneBtn=0x7f080003;
-        public static final int groupName=0x7f080018;
+        public static final int groupName=0x7f080017;
         public static final int list=0x7f080006;
         public static final int locationBtn=0x7f080001;
         public static final int locationlayout=0x7f08000b;
         public static final int loginT=0x7f08000d;
         public static final int mainlayout=0x7f08000c;
-        public static final int messageHist=0x7f080012;
         public static final int nextBtn=0x7f080005;
-        public static final int nextT=0x7f08001a;
-        public static final int pickTime=0x7f080019;
+        public static final int nextT=0x7f080019;
+        public static final int pickTime=0x7f080018;
         public static final int rlpBtns=0x7f080011;
         public static final int rlpCAdd=0x7f080008;
         public static final int rlpMsgHist=0x7f080010;
         public static final int rlpTAdd=0x7f08000e;
-        public static final int spinner=0x7f080013;
-        public static final int textTimeGroup=0x7f080017;
+        public static final int spinner=0x7f080012;
+        public static final int textTimeGroup=0x7f080016;
         public static final int timeBtn=0x7f080002;
-        public static final int timelayout=0x7f080016;
+        public static final int timelayout=0x7f080015;
         public static final int title=0x7f08000f;
     }
     public static final class layout {
