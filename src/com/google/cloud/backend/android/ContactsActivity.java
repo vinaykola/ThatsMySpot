@@ -12,13 +12,17 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.NavUtils;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.Menu;
@@ -47,6 +51,36 @@ public class ContactsActivity extends CloudBackendActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_contacts);
+		
+		// Handler for broadcast messages
+		CloudCallbackHandler<List<CloudEntity>> handler = new CloudCallbackHandler<List<CloudEntity>>() {
+			@Override
+			public void onComplete(List<CloudEntity> messages) {
+				CloudEntity ce = messages.get(0);
+				NotificationCompat.Builder mBuilder =   new NotificationCompat.Builder(getApplicationContext())
+				.setSmallIcon(R.drawable.ic_launcher) // notification icon
+				.setContentTitle((String)ce.get("groupname"))
+				.setContentText((String)ce.get("location") + " @ " + ce.get("time")) // message for notification
+				.setAutoCancel(true); // clear notification after click
+				// TODO: Check if all items are being passes in the Intent
+				Intent intent = new Intent(getApplicationContext(), MessageActivity.class);
+				intent.putExtra("contacts", (String)ce.get("contacts"));
+				intent.putExtra("location", (String)ce.get("location"));
+				intent.putExtra("time", (String)ce.get("time"));
+				intent.putExtra("user", (String)ce.get("user"));
+				intent.putExtra("eventID", (String)ce.get("eventID"));
+				PendingIntent pi = PendingIntent.getActivity(getApplicationContext(),0,intent,Intent.FLAG_ACTIVITY_NEW_TASK);
+				mBuilder.setContentIntent(pi);
+				NotificationManager mNotificationManager =
+						(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+				mNotificationManager.notify(((String)ce.get("eventID")).hashCode(), mBuilder.build());
+			}
+		};
+
+		// Subscribe the messages with my username
+		getCloudBackend().subscribeToCloudMessage(getUsername(), handler, 50);
+
+		
 		// Show the Up button in the action bar.
 		setupActionBar();
 		
@@ -82,8 +116,6 @@ public class ContactsActivity extends CloudBackendActivity {
 		contact_email.add("amish1804@gmail.com");
 		contact_email.add("rochelle.l.lobo@gmail.com");
 		
-		//System.out.println(contact_name.toArray().toString());
-		//System.out.println(contact_email.toArray().toString());
 		filterUsers();
 		
 		RelativeLayout rl = (RelativeLayout) findViewById(R.id.contactlayout);
@@ -107,7 +139,7 @@ public class ContactsActivity extends CloudBackendActivity {
 		//rl.addView(next);
 	}
 
-	public void NewEvent(String friends, String location, String time, String UserEmailID) {
+	public void pushNewEventToDatabase(String friends, String location, String time, String UserEmailID) {
 
         String status="";
         String group="";
@@ -277,7 +309,7 @@ public class ContactsActivity extends CloudBackendActivity {
 				String user = getUsername();
 				activityChangeIntent.putExtra("user", user); // Add username to the intent
 				activityChangeIntent.putExtra("eventID", user+time);
-				NewEvent(sel_contacts,location,time,user);
+				pushNewEventToDatabase(sel_contacts,location,time,user);
 				for(String contact: selectedContacts){
 					CloudEntity cm = getCloudBackend().createCloudMessage(contact);
 					cm.put("contacts", sel_contacts);
@@ -295,13 +327,18 @@ public class ContactsActivity extends CloudBackendActivity {
 	
 	private String getUsername(){
 		AccountManager manager = AccountManager.get(this); 
-	    Account[] accounts = manager.getAccountsByType("com.google"); 
-	    List<String> possibleEmails = new LinkedList<String>();
-	    
-	    for (Account account : accounts) {
-	        possibleEmails.add(account.name);
-	      }
-	    return possibleEmails.get(0);
+		Account[] accounts = manager.getAccountsByType("com.google"); 
+		List<String> possibleEmails = new LinkedList<String>();
+
+		for (Account account : accounts) {
+			possibleEmails.add(account.name);
+		}
+		if(possibleEmails.size() != 0){
+			return possibleEmails.get(0);
+		}
+		else{
+			return "avd@gmail.com"; // Fallback if there's no account associated
+		}
 	}
 
 

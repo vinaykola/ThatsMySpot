@@ -8,9 +8,13 @@ import java.util.Scanner;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,32 +31,43 @@ public class ConversationsActivity extends CloudBackendActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_conversations);
 
-		// Subscribe to messages
+		// Handler for broadcast messages
 		CloudCallbackHandler<List<CloudEntity>> handler = new CloudCallbackHandler<List<CloudEntity>>() {
 			@Override
 			public void onComplete(List<CloudEntity> messages) {
-				for (CloudEntity ce : messages) {
-					Toast.makeText(getApplicationContext(), (CharSequence) ce.get("contacts"), Toast.LENGTH_LONG).show();
-
-					Intent activityChangeIntent = new Intent(ConversationsActivity.this, MessageActivity.class);
-					activityChangeIntent.putExtras(getIntent());//passes location, time, groupname to next intent
-					if(ce.get("eventID") != null) {
-						activityChangeIntent.putExtra("contacts", (String)ce.get("contacts"));
-						activityChangeIntent.putExtra("location", (String)ce.get("location"));
-						activityChangeIntent.putExtra("time", (String)ce.get("time"));
-						activityChangeIntent.putExtra("user", (String)ce.get("user"));
-						activityChangeIntent.putExtra("eventID", (String)ce.get("eventID"));
-					}
-					startActivity(activityChangeIntent);
-				}
+				CloudEntity ce = messages.get(0);
+				NotificationCompat.Builder mBuilder =   new NotificationCompat.Builder(getApplicationContext())
+				.setSmallIcon(R.drawable.ic_launcher) // notification icon
+				.setContentTitle((String)ce.get("groupname"))
+				.setContentText((String)ce.get("location") + " @ " + ce.get("time")) // message for notification
+				.setAutoCancel(true); // clear notification after click
+				// TODO: Check if all items are being passes in the Intent
+				Intent intent = new Intent(getApplicationContext(), MessageActivity.class);
+				intent.putExtra("contacts", (String)ce.get("contacts"));
+				intent.putExtra("location", (String)ce.get("location"));
+				intent.putExtra("time", (String)ce.get("time"));
+				intent.putExtra("user", (String)ce.get("user"));
+				intent.putExtra("eventID", (String)ce.get("eventID"));
+				PendingIntent pi = PendingIntent.getActivity(getApplicationContext(),0,intent,Intent.FLAG_ACTIVITY_NEW_TASK);
+				mBuilder.setContentIntent(pi);
+				NotificationManager mNotificationManager =
+						(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+				mNotificationManager.notify(((String)ce.get("eventID")).hashCode(), mBuilder.build());
 			}
 		};
 
-
-
-
-		// receive all posts that includes "#dog" or "#cat" hashtags
+		// Subscribe the messages with my username
 		getCloudBackend().subscribeToCloudMessage(getUsername(), handler, 50);
+
+		CloudEntity cm = getCloudBackend().createCloudMessage(getUsername());
+		// TODO: Check what all stuff should be passed
+		cm.put("groupname", "Social Computing Group");
+		cm.put("location", "Klaus");
+		cm.put("time", "6:06 pm");
+		cm.put("user", "vinaykola@gmail.com");
+		cm.put("contacts", "vinaykola@gmail.com;amish1804@gmail.com");
+		cm.put("eventID", "vinaykola@gmail.com6:06 pm");
+		getCloudBackend().sendCloudMessage(cm);
 
 
 		try {
@@ -123,7 +138,12 @@ public class ConversationsActivity extends CloudBackendActivity {
 		for (Account account : accounts) {
 			possibleEmails.add(account.name);
 		}
-		return possibleEmails.get(0);
+		if(possibleEmails.size() != 0){
+			return possibleEmails.get(0);
+		}
+		else{
+			return "avd@gmail.com"; // Fallback if there's no account associated
+		}
 	}
 
 	@Override

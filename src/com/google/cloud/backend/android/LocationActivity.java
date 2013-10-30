@@ -9,10 +9,14 @@ import java.util.Scanner;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,10 +33,38 @@ public class LocationActivity extends CloudBackendActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
+		// Handler for broadcast messages
+				CloudCallbackHandler<List<CloudEntity>> handler = new CloudCallbackHandler<List<CloudEntity>>() {
+					@Override
+					public void onComplete(List<CloudEntity> messages) {
+						CloudEntity ce = messages.get(0);
+						NotificationCompat.Builder mBuilder =   new NotificationCompat.Builder(getApplicationContext())
+						.setSmallIcon(R.drawable.ic_launcher) // notification icon
+						.setContentTitle((String)ce.get("groupname"))
+						.setContentText((String)ce.get("location") + " @ " + ce.get("time")) // message for notification
+						.setAutoCancel(true); // clear notification after click
+						// TODO: Check if all items are being passes in the Intent
+						Intent intent = new Intent(getApplicationContext(), MessageActivity.class);
+						intent.putExtra("contacts", (String)ce.get("contacts"));
+						intent.putExtra("location", (String)ce.get("location"));
+						intent.putExtra("time", (String)ce.get("time"));
+						intent.putExtra("user", (String)ce.get("user"));
+						intent.putExtra("eventID", (String)ce.get("eventID"));
+						PendingIntent pi = PendingIntent.getActivity(getApplicationContext(),0,intent,Intent.FLAG_ACTIVITY_NEW_TASK);
+						mBuilder.setContentIntent(pi);
+						NotificationManager mNotificationManager =
+								(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+						mNotificationManager.notify(((String)ce.get("eventID")).hashCode(), mBuilder.build());
+					}
+				};
+
+				// Subscribe the messages with my username
+				getCloudBackend().subscribeToCloudMessage(getUsername(), handler, 50);
+
+		
 		// Push our username to the DB
 		//pushUsername();
-		
-		
+
 		setContentView(R.layout.activity_location);
 		
 //--------------------------------------------------------------------------------------------
@@ -178,6 +210,22 @@ public class LocationActivity extends CloudBackendActivity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.location, menu);
 		return true;
+	}
+	
+	private String getUsername(){
+		AccountManager manager = AccountManager.get(this); 
+		Account[] accounts = manager.getAccountsByType("com.google"); 
+		List<String> possibleEmails = new LinkedList<String>();
+
+		for (Account account : accounts) {
+			possibleEmails.add(account.name);
+		}
+		if(possibleEmails.size() != 0){
+			return possibleEmails.get(0);
+		}
+		else{
+			return "avd@gmail.com"; // Fallback if there's no account associated
+		}
 	}
 
 }
